@@ -1,0 +1,50 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Page {
+  id       String    @id @db.VarChar(36)
+  url      String    @unique @db.VarChar(4096)
+  title    String    @db.VarChar(1024)
+  comments Comment[]
+}
+
+model User {
+  id       String    @id @db.VarChar(128)
+  password String    @db.VarChar(64)
+  comments Comment[]
+  profile  Profile?
+  Session  Session?
+}
+
+model Session {
+  id        String @id @db.VarChar(36)
+  userId    String @db.VarChar(128)
+  expiresAt Int
+  user      User   @relation(fields: [userId], references: [id])
+}
+
+model Profile {
+  userId String  @id @db.VarChar(128)
+  name   String? @db.VarChar(256)
+  user   User    @relation(fields: [userId], references: [id])
+}
+
+model Comment {
+  id      String @id @db.VarChar(36)
+  userId  String @db.VarChar(128)
+  pageId  String @db.VarChar(36)
+  x       Int
+  y       Int
+  content String @db.VarChar(1000)
+  user    User   @relation(fields: [userId], references: [id])
+  page    Page   @relation(fields: [pageId], references: [id])
+}

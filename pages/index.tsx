@@ -1,0 +1,45 @@
+import { PrismaClient, Page } from "@prisma/client";
+import { NextPage } from "next";
+import { AppProps } from "next/dist/next-server/lib/router/router";
+import { useState } from "react";
+import { Apis } from "../lib/Api";
+import styles from "./index.module.scss";
+
+interface InitialProps {
+  pages: Page[];
+}
+
+const Home: NextPage<AppProps & InitialProps, InitialProps> = ({ pages }) => {
+  const [url, setUrl] = useState("");
+
+  async function registerUrl() {
+    await Apis.v1.pages.create(url);
+    location.reload();
+  }
+
+  return (
+    <div style={{ maxWidth: 1024, position: "relative", margin: "auto" }}>
+      <div style={{ display: "flex" }}>
+        <input
+          className={styles.url}
+          value={url}
+          onChange={e => setUrl(e.target.value)}
+        />
+        <button style={{ width: 120, marginLeft: 8 }} onClick={registerUrl}>登録</button>
+      </div>
+      <ul>
+        {pages.map(it => (
+          <li key={it.id}><a href={`/pages/${it.id}`}>{it.title}</a></li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+Home.getInitialProps = async () => {
+  const prisma = new PrismaClient();
+  const pages = await prisma.page.findMany();
+  return { pages };
+}
+
+export default Home;

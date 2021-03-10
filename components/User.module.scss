@@ -1,0 +1,27 @@
+a.opener {
+  text-decoration: none;
+  &::after {
+    content: " v";
+  }
+}
+
+.user {
+  position: absolute;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px 16px;
+  right: 0px;
+  top: 32px;
+  background-color: #fff;
+  white-space: nowrap;
+  z-index: 2;
+}
+
+.backdrop {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+}
