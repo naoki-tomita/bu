@@ -36,6 +36,7 @@
     "format": "run-p format:*",
     "studio": "prisma studio",
     "build": "next build",
+    "prestart": "prisma migrate deploy --preview-feature",
     "start": "next start"
   }
 }
