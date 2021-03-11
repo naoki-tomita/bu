@@ -22,7 +22,7 @@ model User {
   password String    @db.VarChar(64)
   comments Comment[]
   profile  Profile?
-  Session  Session?
+  Session  Session[]
 }
 
 model Session {
