@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 import { v4 } from "uuid";
 import { JSDOM } from "jsdom";
+import { client } from "../../../../lib/PrismaClient";
 
 const Pages: NextApiHandler = async (req, res) => {
   switch (req.method?.toUpperCase()) {
@@ -15,7 +16,6 @@ const Pages: NextApiHandler = async (req, res) => {
 }
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
-  const client = new PrismaClient();
   const { url } = req.body;
 
   const pages = await url

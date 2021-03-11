@@ -62,8 +62,8 @@ export const PageCommenter: FC<{
         src={`/api/v1/proxy?url=${encodeURIComponent(url)}`}
       />
       <ul className={styles.commentList}>
-        {comments.map(c => (
-          <li className={styles.comment}>
+        {comments.map((c) => (
+          <li key={c.id} className={styles.comment}>
             <div>{c.userId}</div>
             <div>{c.content}</div>
           </li>

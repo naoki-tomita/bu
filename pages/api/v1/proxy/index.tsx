@@ -1,5 +1,4 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
-import { JSDOM } from "jsdom";
 import { URL } from "url";
 
 const Proxy: NextApiHandler = async (req, res) => {

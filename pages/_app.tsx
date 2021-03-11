@@ -21,14 +21,19 @@ const HatebuApp = ({ Component, pageProps }: { Component: any, pageProps: AppPro
 }
 
 HatebuApp.getInitialProps = async ({ ctx, Component }: AppContext) => {
-  const user = await getUser(ctx.req!);
-  if (!user) {
-    if (!(Component === Login || Component === Create)) {
-      return ctx.res?.writeHead(302, { Location: "/user/login" }).end();
+  try {
+    const user = await getUser(ctx.req!);
+    if (!user) {
+      if (!(Component === Login || Component === Create)) {
+        return ctx.res?.writeHead(302, { Location: "/user/login" }).end();
+      }
     }
+    const props = await Component.getInitialProps?.(ctx) ?? {};
+    return { pageProps: { ...props, user } };
+  } catch (e) {
+    // For error page generation.
+    return { pageProps: {} };
   }
-  const props = await Component.getInitialProps?.(ctx) ?? {};
-  return { pageProps: { ...props, user } };
 }
 
 export interface AppProps {

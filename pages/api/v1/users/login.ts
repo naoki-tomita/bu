@@ -1,8 +1,8 @@
-import { PrismaClient } from "@prisma/client";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 import { createHash } from "crypto";
 import { v4 } from "uuid";
 import { setSession } from "../../../../lib/Session";
+import { client } from "../../../../lib/PrismaClient";
 
 const login: NextApiHandler = (req, res) => {
   switch (req.method?.toUpperCase()) {
@@ -13,7 +13,6 @@ const login: NextApiHandler = (req, res) => {
   }
 }
 
-const client = new PrismaClient();
 async function post(req: NextApiRequest, res: NextApiResponse) {
   const { id: userId, password } = req.body;
   const user = await client.user.findFirst({ where: { id: userId } });
