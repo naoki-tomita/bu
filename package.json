@@ -37,6 +37,6 @@
     "studio": "prisma studio",
     "build": "next build",
     "prestart": "prisma migrate deploy --preview-feature",
-    "start": "next start"
+    "start": "next start -p $PORT"
   }
 }
