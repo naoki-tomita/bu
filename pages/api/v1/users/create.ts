@@ -2,7 +2,7 @@ import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 import { createHash } from "crypto";
 import { v4 } from "uuid";
 import { setSession } from "../../../../lib/Session";
-import { PrismaClient } from "@prisma/client";
+import { getClient } from "../../../../lib/PrismaClient";
 
 const create: NextApiHandler = (req, res) => {
   switch (req.method?.toUpperCase()) {
@@ -14,7 +14,7 @@ const create: NextApiHandler = (req, res) => {
 }
 
 async function post(req: NextApiRequest, res: NextApiResponse) {
-  const client = new PrismaClient();
+  const client = getClient();
   const { id: userId, password } = req.body;
   const cryptedPassword = createHash("sha256").update(password).digest("hex");
   await client.user.create({ data: { id: userId, password: cryptedPassword } });

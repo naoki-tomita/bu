@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
+import { getClient } from "../../../../lib/PrismaClient";
 import { clearSession, getUser } from "../../../../lib/Session";
 
 const logout: NextApiHandler = (req, res) => {
@@ -12,9 +12,8 @@ const logout: NextApiHandler = (req, res) => {
 }
 
 async function post(req: NextApiRequest, res: NextApiResponse) {
-  const client = new PrismaClient();
   const user = await getUser(req);
-  await client.session.deleteMany({ where: { userId: user!.id } })
+  await getClient().session.deleteMany({ where: { userId: user!.id } })
   clearSession(res).json({});
 }
 

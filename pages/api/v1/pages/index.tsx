@@ -1,7 +1,7 @@
-import { PrismaClient } from "@prisma/client";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 import { v4 } from "uuid";
 import { JSDOM } from "jsdom";
+import { getClient } from "../../../../lib/PrismaClient";
 
 const Pages: NextApiHandler = async (req, res) => {
   switch (req.method?.toUpperCase()) {
@@ -15,7 +15,7 @@ const Pages: NextApiHandler = async (req, res) => {
 }
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
-  const client = new PrismaClient();
+  const client = getClient();
   const { url } = req.body;
 
   const pages = await url
@@ -25,13 +25,12 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function post(req: NextApiRequest, res: NextApiResponse) {
-  const client = new PrismaClient();
   const id = v4();
   const { url } = req.body;
   const html = await fetch(url).then(it => it.text());
   const dom = new JSDOM(html);
   const title = dom.window.document.querySelector("title");
-  const created = await client.page.create({ data: { id, url, title: title?.textContent ?? url } });
+  const created = await getClient().page.create({ data: { id, url, title: title?.textContent ?? url } });
   return res.json(created);
 }
 

@@ -1,4 +1,3 @@
-import { PrismaClient, User } from "@prisma/client";
 import { NextPage } from "next";
 import { useState } from "react";
 import { Apis } from "../../lib/Api";

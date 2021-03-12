@@ -1,6 +1,7 @@
-import { Comment, Page, PrismaClient, User } from "@prisma/client";
+import { Comment, Page, User } from "@prisma/client";
 import { NextPage } from "next";
 import { PageCommenter } from "../../components/PageCommenter";
+import { getClient } from "../../lib/PrismaClient";
 
 const PageComponent: NextPage<{
   pageId: string;
@@ -26,8 +27,7 @@ const PageComponent: NextPage<{
 
 PageComponent.getInitialProps = async (context) => {
   const { pageId: id } = context.query;
-  const prisma = new PrismaClient();
-  const page = await prisma.page.findFirst({
+  const page = await getClient().page.findFirst({
     where: { id: id as string },
     include: {
       comments: {

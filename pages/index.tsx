@@ -1,8 +1,9 @@
-import { PrismaClient, Page } from "@prisma/client";
+import { Page } from "@prisma/client";
 import { NextPage } from "next";
 import { AppProps } from "next/dist/next-server/lib/router/router";
 import { useState } from "react";
 import { Apis } from "../lib/Api";
+import { getClient } from "../lib/PrismaClient";
 import styles from "./index.module.scss";
 
 interface InitialProps {
@@ -37,8 +38,7 @@ const Home: NextPage<AppProps & InitialProps, InitialProps> = ({ pages }) => {
 }
 
 Home.getInitialProps = async () => {
-  const prisma = new PrismaClient();
-  const pages = await prisma.page.findMany();
+  const pages = await getClient().page.findMany();
   return { pages };
 }
 
