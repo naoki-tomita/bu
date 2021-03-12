@@ -1,6 +1,6 @@
+import { PrismaClient } from "@prisma/client";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 import { v4 } from "uuid";
-import { client } from "../../../../../../lib/PrismaClient";
 import { getUser } from "../../../../../../lib/Session";
 
 const Comments: NextApiHandler = async (req, res) => {
@@ -13,6 +13,7 @@ const Comments: NextApiHandler = async (req, res) => {
 }
 
 async function post(req: NextApiRequest, res: NextApiResponse) {
+  const client = new PrismaClient();
   const user = await getUser(req);
   if (!user) {
     return res.writeHead(500).json({ error: "Not logged in." });

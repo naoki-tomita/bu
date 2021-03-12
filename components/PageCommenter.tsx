@@ -13,6 +13,11 @@ export const PageCommenter: FC<{
     const div = ref.current!.contentDocument!.createElement("div");
     div.style.position = "absolute";
     const input = ref.current!.contentDocument!.createElement("input");
+    input.style.border = "1px solid #ccc";
+    input.style.borderRadius = "4px";
+    input.style.padding = "4px 8px"
+    input.style.width = "240px";
+    input.style.background = "#fff";
     input.addEventListener("keypress", (e) => e.key === "Enter" && onCreateComment((e.target as HTMLInputElement).value))
     div.append(input);
     return div;
@@ -31,7 +36,8 @@ export const PageCommenter: FC<{
   }
 
   function showPin(text: string, x: number, y: number) {
-    const document = ref.current!.contentDocument!;
+    if (!ref.current?.contentDocument) return;
+    const document = ref.current.contentDocument;
     const div = document.createElement("div");
     div.style.position = "absolute";
     div.style.top = `${y}px`;
@@ -46,14 +52,12 @@ export const PageCommenter: FC<{
   }
 
   useEffect(() => {
-    ref.current!.onload = () => {
-      ref.current!.contentWindow!.oncontextmenu = (e) => {
-        e.preventDefault();
-        showCommentPopup(e.pageX, e.pageY);
-      }
-      comments.forEach(it => showPin(it.content, it.x, it.y));
+    ref.current!.contentWindow!.oncontextmenu = (e) => {
+      e.preventDefault();
+      showCommentPopup(e.pageX, e.pageY);
     }
-  }, [ref.current]);
+    setTimeout(() => comments.forEach(it => showPin(it.content, it.x, it.y)), 100);
+  }, []);
   return (
     <div style={{ display: "flex" }}>
       <iframe

@@ -19,8 +19,9 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
     .writeHead(200, { "content-type": "text/html" })
     .end(
       html
-        .replace(/href="\//g, `href="${parsedUrl.origin}/`)
-        .replace(/src="\//g, `src="${parsedUrl.origin}/`)
+        .replace(/\n/g, " ")
+        .replace(/<head>/, `<head><base href="${parsedUrl.origin}">`)
+        .replace(/<script(.*?)>(.*?)<\/script>/g, ``)
     );
 }
 
