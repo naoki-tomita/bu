@@ -8,7 +8,6 @@ export const PageCommenter: FC<{
   comments: Array<Comment & { user: User }>
 }> = ({ url, onCreateComment, comments }) => {
   function setupIframe(el: HTMLIFrameElement | null) {
-    console.log(el);
     function createCommentInputElement(onCreateComment: (e: string) => void) {
       if (!el) return;
       const div = el.contentDocument!.createElement("div");
@@ -59,7 +58,6 @@ export const PageCommenter: FC<{
         e.preventDefault();
         showCommentPopup(e.pageX, e.pageY);
       });
-      console.log(comments.length);
       setTimeout(() => comments.forEach(it => showPin(it.content, it.x, it.y)), 100);
     })
   }
