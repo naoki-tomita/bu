@@ -7,61 +7,66 @@ export const PageCommenter: FC<{
   onCreateComment: (comment: string, position: { x: number, y: number }) => void;
   comments: Array<Comment & { user: User }>
 }> = ({ url, onCreateComment, comments }) => {
-  const ref = useRef<HTMLIFrameElement>(null);
-
-  function createCommentInputElement(onCreateComment: (e: string) => void) {
-    const div = ref.current!.contentDocument!.createElement("div");
-    div.style.position = "absolute";
-    const input = ref.current!.contentDocument!.createElement("input");
-    input.style.border = "1px solid #ccc";
-    input.style.borderRadius = "4px";
-    input.style.padding = "4px 8px"
-    input.style.width = "240px";
-    input.style.background = "#fff";
-    input.addEventListener("keypress", (e) => e.key === "Enter" && onCreateComment((e.target as HTMLInputElement).value))
-    div.append(input);
-    return div;
-  }
-
-  function showCommentPopup(x: number, y: number) {
-    const document = ref.current!.contentDocument!;
-    const div = createCommentInputElement((text) => {
-      document.body.removeChild(div);
-      onCreateComment(text, { x, y });
-    });
-    div.style.top = `${y}px`;
-    div.style.left = `${x}px`;
-    div.style.zIndex = "30000";
-    document.body.append(div);
-  }
-
-  function showPin(text: string, x: number, y: number) {
-    if (!ref.current?.contentDocument) return;
-    const document = ref.current.contentDocument;
-    const div = document.createElement("div");
-    div.style.position = "absolute";
-    div.style.top = `${y}px`;
-    div.style.left = `${x}px`;
-    div.style.zIndex = "30000";
-    div.style.backgroundColor = "#fff";
-    div.style.border = "1px solid #ccc";
-    div.style.borderRadius = "2px";
-    div.style.padding = "4px 8px";
-    div.textContent = text;
-    document.body.append(div);
-  }
-
-  useEffect(() => {
-    ref.current!.contentWindow!.oncontextmenu = (e) => {
-      e.preventDefault();
-      showCommentPopup(e.pageX, e.pageY);
+  function setupIframe(el: HTMLIFrameElement | null) {
+    console.log(el);
+    function createCommentInputElement(onCreateComment: (e: string) => void) {
+      if (!el) return;
+      const div = el.contentDocument!.createElement("div");
+      div.style.position = "absolute";
+      const input = el.contentDocument!.createElement("input");
+      input.style.border = "1px solid #ccc";
+      input.style.borderRadius = "4px";
+      input.style.padding = "4px 8px"
+      input.style.width = "240px";
+      input.style.background = "#fff";
+      input.addEventListener("keypress", (e) => e.key === "Enter" && onCreateComment((e.target as HTMLInputElement).value))
+      div.append(input);
+      return div;
     }
-    setTimeout(() => comments.forEach(it => showPin(it.content, it.x, it.y)), 100);
-  }, []);
+
+    function showCommentPopup(x: number, y: number) {
+      if (!el) return;
+      const document = el.contentDocument!;
+      const div = createCommentInputElement((text) => {
+        document.body.removeChild(div);
+        onCreateComment(text, { x, y });
+      })!;
+      if (!div) return;
+      div.style.top = `${y}px`;
+      div.style.left = `${x}px`;
+      div.style.zIndex = "30000";
+      document.body.append(div);
+    }
+
+    function showPin(text: string, x: number, y: number) {
+      if (!el) return;
+      const document = el.contentDocument!;
+      const div = document.createElement("div");
+      div.style.position = "absolute";
+      div.style.top = `${y}px`;
+      div.style.left = `${x}px`;
+      div.style.zIndex = "30000";
+      div.style.backgroundColor = "#fff";
+      div.style.border = "1px solid #ccc";
+      div.style.borderRadius = "2px";
+      div.style.padding = "4px 8px";
+      div.textContent = text;
+      document.body.append(div);
+    }
+
+    el && (el.onload = () => {
+      el.contentWindow && (el.contentWindow.oncontextmenu = (e) => {
+        e.preventDefault();
+        showCommentPopup(e.pageX, e.pageY);
+      });
+      console.log(comments.length);
+      setTimeout(() => comments.forEach(it => showPin(it.content, it.x, it.y)), 100);
+    })
+  }
   return (
     <div style={{ display: "flex" }}>
       <iframe
-        ref={ref}
+        ref={setupIframe}
         style={{ position: "relative", minWidth: 1024, boxSizing: "border-box", height: 640 }}
         src={`/api/v1/proxy?url=${encodeURIComponent(url)}`}
       />
