@@ -18,6 +18,11 @@ const Home: NextPage<AppProps & InitialProps, InitialProps> = ({ pages }) => {
     location.reload();
   }
 
+  async function deleteUrl(id: string) {
+    await Apis.v1.pages.delete(id);
+    location.reload();
+  }
+
   return (
     <div style={{ maxWidth: 1024, position: "relative", margin: "auto" }}>
       <div style={{ display: "flex" }}>
@@ -30,7 +35,7 @@ const Home: NextPage<AppProps & InitialProps, InitialProps> = ({ pages }) => {
       </div>
       <ul>
         {pages.map(it => (
-          <li key={it.id}><a href={`/pages/${it.id}`}>{it.title}</a></li>
+          <li key={it.id}><a href={`/pages/${it.id}`}>{it.title}</a> <button onClick={() => deleteUrl(it.id)}>x</button></li>
         ))}
       </ul>
     </div>

@@ -38,6 +38,9 @@ export const Apis = {
             }
           }
         };
+      },
+      delete(id: string) {
+        return fetch(`/api/v1/pages/${id}`, { method: "DELETE" });
       }
     }
   }
