@@ -11,9 +11,10 @@ const Comments: NextApiHandler = async (req, res) => {
 }
 
 async function deletes(req: NextApiRequest, res: NextApiResponse) {
-  const { id } = req.query as { id: string };
-  await getClient().comment.deleteMany({ where: { pageId: id } });
-  await getClient().page.deleteMany({ where: { id } });
+  const { pageId } = req.query as { pageId: string };
+  console.log(pageId);
+  await getClient().comment.deleteMany({ where: { pageId } });
+  await getClient().page.deleteMany({ where: { id: pageId } });
   return res.json({});
 }
 
