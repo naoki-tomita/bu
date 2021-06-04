@@ -37,8 +37,8 @@
     "format:db": "prisma format",
     "format:app": "echo format",
     "studio": "prisma studio",
-    "prebuild": "run-p db:generate",
     "build": "next build",
+    "postbuild": "run-p db:generate",
     "prestart": "prisma migrate deploy --preview-feature",
     "start": "next start -p $PORT"
   }
