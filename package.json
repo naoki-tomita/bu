@@ -38,7 +38,8 @@
     "format:app": "echo format",
     "studio": "prisma studio",
     "build": "next build",
-    "postbuild": "run-p db:generate",
+    "postbuild": "run-s db:generate list",
+    "list": "ls node_modules/@prisma/client",
     "prestart": "prisma migrate deploy --preview-feature",
     "start": "next start -p $PORT"
   }
